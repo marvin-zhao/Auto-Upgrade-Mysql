@@ -119,6 +119,7 @@ make
 
 /etc/init.d/mysql stop
 mv /usr/local/mysql/ /usr/local/mysql.old
+make install
 cp -a /usr/local/mysql.old/var/* /usr/local/mysql/data
 chown -R mysql.mysql /usr/local/mysql/data
 chgrp -R mysql /usr/local/mysql/.
@@ -133,10 +134,23 @@ ldconfig
 
 rm -f /usr/lib/mysql
 rm -f /usr/include/mysql
+rm -f /usr/bin/mysql
+rm -f /usr/bin/myisamchk
+rm -f /usr/bin/mysqldump
+ln -s /usr/local/mysql/bin/mysql /usr/bin/mysql
+ln -s /usr/local/mysql/bin/myisamchk /usr/bin/myisamchk
+ln -s /usr/local/mysql/bin/mysqldump /usr/bin/mysqldump
 ln -s /usr/local/mysql/lib /usr/lib/mysql
 ln -s /usr/local/mysql/include /usr/include/mysql
 
 /etc/init.d/mysql start
+pid=`ps -ef|grep mysqld_safe|grep -v grep|awk '{print $2}'`
+if [ "$pid" == "" ]; then
+	echo "Error Insatll Mysql...."
+	cd ..
+	sleep 5
+	exit 1
+fi
 echo "Upgrade completed!"
 echo "Program will display Mysql Version......"
 mysql --version
