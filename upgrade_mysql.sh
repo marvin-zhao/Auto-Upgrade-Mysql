@@ -123,12 +123,13 @@ make install
 cp -a /usr/local/mysql.old/var/* /usr/local/mysql/data
 chown -R mysql.mysql /usr/local/mysql/data
 chgrp -R mysql /usr/local/mysql/.
-mv /etc/init.d/mysql /etc/init.d/mysql.old
+mv /etc/init.d/mysql /etc/init.d/mysql.old -f
 cp support-files/mysql.server /etc/init.d/mysql
 chmod 755 /etc/init.d/mysql
 
-cat > /etc/ld.so.conf<<EOF
+cat > /etc/ld.so.conf.d/mysql.conf<<EOF
 /usr/local/mysql/lib
+/usr/local/lib
 EOF
 ldconfig
 
